@@ -112,3 +112,19 @@ test('Test POST XHR2 types', function(t) {
   };
   request.end(new global.FormData());
 });
+
+test('Test file protocol in window.location', function(t) {
+	var oldLocation = window.location;
+	window.location = {
+    host: '',
+    port: '',
+    protocol: 'file:'
+	};
+
+  var request = http.request({ host: 'www.test.com', path: '/'}, noop);
+  var get = http.get({ host: 'www.test.com', path: '/'}, noop);
+  t.equal(request.uri, 'http://www.test.com:80/', 'protocol should default to http');
+  t.equal(get.uri, 'http://www.test.com:80/', 'protocol get should default to http');
+  t.end();
+	window.location = oldLocation;
+});
